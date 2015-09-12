@@ -10,7 +10,6 @@
 <body>
   <div class="container" ng-controller="AppCtrl">
     <h1>Contact list app</h1>
-
     <table class="table">
       <thead>
         <tr>
@@ -24,9 +23,15 @@
             Number
           </th>
           <th>
-            Action
+            Year
           </th>
           <th>
+            Month
+          </th>
+          <th>
+            Action
+          </th>
+          <th colspan="2">
             &nbsp;
           </th>
         </tr>
@@ -43,10 +48,23 @@
             <input class="form-control" ng-model="contact.number">
           </td>
           <td>
+            <!-- <input class="form-control" ng-model="contact.year"> -->
+            <select class="form-control" ng-model="contact.year" ng-options="year for year in years"></select>
+          </td>
+          <td>
+            <!-- <select class="form-control" ng-model="contact.month">
+              <option ng-repeat="month in months" value="{{month.id}}">{{month.name}}</option>
+            </select> -->
+            <select class="form-control" ng-model="contact.month" ng-options="month.name for month in months track by month.id"></select>
+          </td>
+          <td>
             <button type="button" class="btn btn-primary" ng-click="addContact()">Add Contact</button>
           </td>
           <td>
             <button type="button" class="btn btn-info" ng-click="update()">Update</button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-info" ng-click="clear()">Clear</button>
           </td>
         </tr>
         <tr ng-repeat="contact in contactlist">
@@ -60,16 +78,22 @@
             {{contact.number}}
           </td>
           <td>
-            <button type="button" class="btn btn-danger" ng-click="delete(contact._id)">Delete</button>
+            {{contact.year}}
           </td>
           <td>
+            {{contact.month.name}}
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger" ng-click="delete(contact._id)">Delete</button>
+          </td>
+          <td colspan="2">
             <button type="button" class="btn btn-warning" ng-click="edit(contact._id)">Edit</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js">
   </script>
   <script src="controllers/controller.js"></script>
 </body>
