@@ -55,7 +55,8 @@
             <!-- <select class="form-control" ng-model="contact.month">
               <option ng-repeat="month in months" value="{{month.id}}">{{month.name}}</option>
             </select> -->
-            <select class="form-control" ng-model="contact.month" ng-options="month.name for month in months track by month.id"></select>
+            <select class="form-control" ng-model="contact.month" ng-options="parseInt(key) as value for (key, value ) in months">              
+            </select>
           </td>
           <td>
             <button type="button" class="btn btn-primary" ng-click="addContact()">Add Contact</button>
@@ -81,7 +82,7 @@
             {{contact.year}}
           </td>
           <td>
-            {{contact.month.name}}
+            {{contact.month | monthName}} <!-- date:'MMMM' -->
           </td>
           <td>
             <button type="button" class="btn btn-danger" ng-click="delete(contact._id)">Delete</button>

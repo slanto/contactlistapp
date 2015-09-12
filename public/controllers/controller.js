@@ -1,13 +1,36 @@
 (function () {
 	'use strict';
 
+	//TODO: move it to server.js
+	function getMonths(locale) {
+		locale = locale || "pl-PL";
+		//TODO: try http://momentjs.com/
+		var months = [];
+		for(var i = 1; i <= 9; i++) {
+			var date = new Date("2015-0" + i + "-01");
+			months.push(date.toLocaleString(locale, { month: "long" }));
+		}
+		for(var i = 10; i <= 12; i++) {
+			var date = new Date("2015-" + i + "-01");
+			months.push(date.toLocaleString(locale, { month: "long" }));
+		}
+		return months;
+	};
+
   var myApp = angular.module('myApp', []);
 
+	 myApp.filter('monthName', [function() {
+			return function (monthNumber) { //0 = January
+					var monthNames = getMonths();
+					return monthNames[monthNumber];
+			}
+		}]);
+
 	  myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
-			var locale = "pl-PL";
 
 			var refresh = function() {
 				$http.get('/contactlist').success(function(response) {
+					console.log(response);
 					$scope.contactlist = response;
 					clearAndSetDefault();
 				});
@@ -22,7 +45,7 @@
 			var clearAndSetDefault = function() {
 				$scope.contact = {
 					year: new Date().getFullYear(),
-					month: { id: new Date().getMonth() + 1 },
+					month: new Date().getMonth(),
 					created: new Date()
 				};
 			};
@@ -34,6 +57,7 @@
 			};
 
 			$scope.addContact = function(){
+				console.log($scope.contact);
 				$http.post('/contactlist', $scope.contact).success(function(response) {
 					refresh();
 				});
@@ -44,6 +68,10 @@
 					refresh();
 				});
 			};
+
+			$scope.parseInt = function(number) {
+        return parseInt(number, 10);
+    	}
 
 			$scope.edit = function(id){
 				console.log(id);
@@ -69,21 +97,6 @@
 				startYear++;
 			}
 			return years;
-		};
-
-		//TODO: move it to server.js
-		function getMonths() {
-			//TODO: try http://momentjs.com/
-			var months = [];
-			for(var i = 1; i <= 9; i++) {
-				var date = new Date("2015-0" + i + "-01");
-				months.push({ id: i, name: date.toLocaleString(locale, { month: "long" })});
-			}
-			for(var i = 10; i <= 12; i++) {
-				var date = new Date("2015-" + i + "-01");
-				months.push({ id: i, name: date.toLocaleString(locale, { month: "long" })});
-			}
-			return months;
 		};
 
 	}]);
