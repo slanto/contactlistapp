@@ -8,7 +8,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
 app.get('/contactlist', function(req, res) {
-  db.contactlist.find(function(err, docs) {
+  db.contactlist.find(function(err, docs) { //{year: 2015, month: 1}, 
     res.json(docs);
   });
 

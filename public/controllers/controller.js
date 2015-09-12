@@ -1,17 +1,13 @@
 (function () {
 	'use strict';
 
-	//TODO: move it to server.js
 	function getMonths(locale) {
 		locale = locale || "pl-PL";
-		//TODO: try http://momentjs.com/
 		var months = [];
-		for(var i = 1; i <= 9; i++) {
-			var date = new Date("2015-0" + i + "-01");
-			months.push(date.toLocaleString(locale, { month: "long" }));
-		}
-		for(var i = 10; i <= 12; i++) {
-			var date = new Date("2015-" + i + "-01");
+		months.push("--Wybierz miesiąc--")
+		for(var i = 0; i < 12; i++) {
+			var date = new Date();
+			date.setMonth(i);
 			months.push(date.toLocaleString(locale, { month: "long" }));
 		}
 		return months;
@@ -20,7 +16,7 @@
   var myApp = angular.module('myApp', []);
 
 	 myApp.filter('monthName', [function() {
-			return function (monthNumber) { //0 = January
+			return function (monthNumber) { //1 = January
 					var monthNames = getMonths();
 					return monthNames[monthNumber];
 			}
@@ -30,7 +26,6 @@
 
 			var refresh = function() {
 				$http.get('/contactlist').success(function(response) {
-					console.log(response);
 					$scope.contactlist = response;
 					clearAndSetDefault();
 				});
@@ -43,10 +38,11 @@
 			};
 
 			var clearAndSetDefault = function() {
+				var date = new Date();
 				$scope.contact = {
-					year: new Date().getFullYear(),
-					month: new Date().getMonth(),
-					created: new Date()
+					year: date.getFullYear(),
+					month: date.getMonth() + 1,
+					created: date
 				};
 			};
 
@@ -57,7 +53,6 @@
 			};
 
 			$scope.addContact = function(){
-				console.log($scope.contact);
 				$http.post('/contactlist', $scope.contact).success(function(response) {
 					refresh();
 				});
@@ -74,9 +69,7 @@
     	}
 
 			$scope.edit = function(id){
-				console.log(id);
-				$http.get('/contactlist/' + id).success(function(response) {
-					console.log(response);
+				$http.get('/contactlist/' + id).success(function(response) {					
 					$scope.contact = response;
 				});
 			};
