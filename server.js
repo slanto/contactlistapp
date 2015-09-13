@@ -7,8 +7,18 @@ var bodyParser = require('body-parser');
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
-app.get('/contactlist', function(req, res) {
-  db.contactlist.find(function(err, docs) { //{year: 2015, month: 1}, 
+app.get('/contactlist/:year?/:month?', function(req, res) {
+  var criteria = {};
+
+  if (req.params.year) {
+    criteria.year = parseInt(req.params.year);
+  }
+
+  if (req.params.month) {
+    criteria.month = parseInt(req.params.month);
+  }
+
+  db.contactlist.find(criteria, function(err, docs) {
     res.json(docs);
   });
 
@@ -52,5 +62,6 @@ app.put('/contactlist/:id', function(req, res) {
   });
 });
 
-app.listen(3000);
-console.log('Server running on port 3000');
+app.listen(3000, function() {
+  console.log('Server running on port 3000');  
+});
