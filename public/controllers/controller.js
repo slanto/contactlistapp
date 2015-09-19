@@ -26,7 +26,8 @@
 
 			var refresh = function() {
 				$http.get('/contactlist').success(function(response) {
-					$scope.contactlist = response;
+					$scope.contactlist = response.items;
+					$scope.totalAmount = response.totalAmount;
 					clearAndSetDefault();
 				});
 			};
@@ -66,10 +67,11 @@
 
 			$scope.parseInt = function(number) {
         return parseInt(number, 10);
-    	}
+    	};
 
 			$scope.edit = function(id){
-				$http.get('/contactlist/' + id).success(function(response) {					
+				$http.get('/contactlist/' + id).success(function(response) {
+					response.amount = response.amount.toString().replace('.', ',');
 					$scope.contact = response;
 				});
 			};
