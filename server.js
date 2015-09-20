@@ -5,6 +5,7 @@ var db = mongojs('contactlist', ['contactlist']);
 var bodyParser = require('body-parser');
 
 app.use(express.static(__dirname + "/public"));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use(bodyParser.json());
 
 app.get('/contactlist/:id', function(req, res) {
@@ -43,7 +44,7 @@ app.get('/contactlist/:year?/:month?', function(req, res) {
 
 
 var getAmount = function(str) {
-  return parseFloat(str.replace(',', '.')) * 1000;
+  return str * 1000;
 };
 
 app.post('/contactlist', function(req, res){

@@ -3,15 +3,16 @@
 <head>
   <title>Contact List App</title>
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/css/master.css" media="screen" title="no title" charset="utf-8">
 </head>
 <body>
   <div class="container" ng-controller="AppCtrl">
     <h1>Contact list app {{totalAmount | currency}}</h1>
-
-    <table class="table">
+    <form name="contactlistform" class="form-group">
+      <table class="table">
       <thead>
         <tr>
           <th>
@@ -40,33 +41,33 @@
       <tbody>
         <tr>
           <td>
-            <input class="form-control" ng-model="contact.name">
+            <input type="text" class="form-control" ng-model="contact.name" required />
           </td>
           <td>
-            <input class="form-control" ng-model="contact.email">
+            <input type="email" class="form-control" ng-model="contact.email" required />
           </td>
           <td>
-            <input class="form-control" ng-model="contact.amount">
+            <input type="number" step="0.01" class="form-control" ng-model="contact.amount" required />
           </td>
           <td>
             <!-- <input class="form-control" ng-model="contact.year"> -->
-            <select class="form-control" ng-model="contact.year" ng-options="year for year in years"></select>
+            <select class="form-control" ng-model="contact.year" ng-options="year for year in years" required></select>
           </td>
           <td>
             <!-- <select class="form-control" ng-model="contact.month">
               <option ng-repeat="month in months" value="{{month.id}}">{{month.name}}</option>
             </select> -->
-            <select class="form-control" ng-model="contact.month" ng-options="parseInt(key) as value for (key, value ) in months">
+            <select class="form-control" ng-model="contact.month" ng-options="parseInt(key) as value for (key, value ) in months" required>
             </select>
           </td>
           <td>
-            <button type="button" class="btn btn-primary" ng-click="addContact()">Add Contact</button>
+            <button type="button" class="btn btn-primary" ng-click="saveContact()" ng-disabled="contactlistform.$invalid">Save</button>
           </td>
           <td>
             <button type="button" class="btn btn-info" ng-click="update()">Update</button>
           </td>
           <td>
-            <button type="button" class="btn btn-info" ng-click="clear()">Clear</button>
+            <button type="button" class="btn btn-info" ng-click="addContact()">Add contact</button>
           </td>
         </tr>
         <tr ng-repeat="contact in contactlist">
@@ -94,10 +95,10 @@
         </tr>
       </tbody>
     </table>
+    </form>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js">
-  </script>
-  <script src="https://code.angularjs.org/1.4.5/i18n/angular-locale_pl-pl.js"></script>
+  <script src="/bower_components/angular/angular.min.js"></script>
+  <script src="/bower_components/angular-i18n/angular-locale_pl-pl.js"></script>  
   <script src="controllers/controller.js"></script>
 </body>
 </html>

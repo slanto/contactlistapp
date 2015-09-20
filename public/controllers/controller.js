@@ -49,11 +49,11 @@
 
 			init();
 
-			$scope.clear = function() {
+			$scope.addContact = function() {
 				clearAndSetDefault();
 			};
 
-			$scope.addContact = function(){
+			$scope.saveContact = function(){
 				$http.post('/contactlist', $scope.contact).success(function(response) {
 					refresh();
 				});
@@ -71,7 +71,7 @@
 
 			$scope.edit = function(id){
 				$http.get('/contactlist/' + id).success(function(response) {
-					response.amount = response.amount.toString().replace('.', ',');
+					// response.amount = response.amount.toString().replace('.', ',');
 					$scope.contact = response;
 				});
 			};
