@@ -51,6 +51,8 @@
 
 			$scope.addContact = function() {
 				clearAndSetDefault();
+				$scope.isSaveAvailable = true;
+				$scope.isUpdateAvailable = false;
 			};
 
 			$scope.saveContact = function(){
@@ -71,16 +73,22 @@
 
 			$scope.edit = function(id){
 				$http.get('/contactlist/' + id).success(function(response) {
-					// response.amount = response.amount.toString().replace('.', ',');
 					$scope.contact = response;
+					$scope.isSaveAvailable = false;
+					$scope.isUpdateAvailable = true;
 				});
 			};
 
 			$scope.update = function() {
 				$http.put('/contactlist/' + $scope.contact._id, $scope.contact).success(function(response) {
 					refresh();
+					$scope.isSaveAvailable = false;
+					$scope.isUpdateAvailable = false;
 				});
 			};
+
+			$scope.isSaveAvailable = false;
+			$scope.isUpdateAvailable = false;
 
 		 //TODO: move it to server.js
 		 function getYears() {
