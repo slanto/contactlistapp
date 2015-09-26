@@ -18,7 +18,7 @@ app.get('/contactlist/:id', function(req, res) {
 
 app.get('/contactlist/:year?/:month?', function(req, res) {
   var criteria = {};
-
+  
   if (req.params.year) {
     criteria.year = parseInt(req.params.year);
   }

@@ -25,16 +25,20 @@
 	  myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
 
 			var refresh = function() {
-				$http.get('/contactlist').success(function(response) {
-					$scope.contactlist = response.items;
-					$scope.totalAmount = response.totalAmount;
-					clearAndSetDefault();
+				$http.get('/contactlist/' + $scope.searchYear + '/' + $scope.searchMonth)
+					.success(function(response) {
+						$scope.contactlist = response.items;
+						$scope.totalAmount = response.totalAmount;
+						clearAndSetDefault();
 				});
 			};
 
 			var init = function() {
 				$scope.years = getYears();
 				$scope.months = getMonths();
+				var date = new Date();
+				$scope.searchYear = date.getFullYear();
+				$scope.searchMonth = date.getMonth() + 1;
 				refresh();
 			};
 
@@ -79,6 +83,10 @@
 				});
 			};
 
+			$scope.search = function() {
+				refresh();
+			}
+			
 			$scope.update = function() {
 				$http.put('/contactlist/' + $scope.contact._id, $scope.contact).success(function(response) {
 					refresh();

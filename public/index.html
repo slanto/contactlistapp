@@ -47,8 +47,16 @@
     <div class="container" ng-controller="AppCtrl">
       <div class="starter-template">
         <h1>Contact list app {{totalAmount | currency}}</h1>
+        
+        <form class="form-inline">
+          <div class="form-group">
+              <select class="form-control" ng-model="searchMonth" ng-change="search()" ng-options="parseInt(key) as value for (key, value ) in months"></select>
+              <select class="form-control" ng-model="searchYear" ng-options="year for year in years" ng-change="search()"></select>
 
-        <button type="button" class="btn btn-info" ng-click="addContact()">Add contact</button>
+              <input class="form-control" type="text" ng-model="searchKeyword" placeholder="seach"/>
+              <button type="button" class="btn btn-info" ng-click="addContact()">Add contact</button>
+          </div>
+        </form>
 
         <form name="contactlistform" class="form-group">
           <table class="table">
@@ -99,9 +107,9 @@
               <td>
                 <button type="button" class="btn btn-primary" ng-click="saveContact()" ng-disabled="contactlistform.$invalid" ng-show="isSaveAvailable">Save</button>
                 <button type="button" class="btn btn-info" ng-click="update()" ng-disabled="contactlistform.$invalid" ng-show="isUpdateAvailable">Update</button>
-              </td>              
+              </td>
             </tr>
-            <tr ng-repeat="contact in contactlist">
+            <tr ng-repeat="contact in contactlist | filter: searchKeyword">
               <td>
                 {{contact.name}}
               </td>
@@ -126,7 +134,7 @@
             </tr>
           </tbody>
         </table>
-        </form>
+      </form>
       </div>
     </div><!-- /.container -->
 
