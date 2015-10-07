@@ -58,7 +58,7 @@
           </div>
         </form>
 
-        <form name="contactlistform" class="form-group">
+        <form name="contactlistform" ng-submit="saveContact()" novalidate>
           <table class="table">
           <thead>
             <tr>
@@ -88,10 +88,12 @@
           <tbody>
             <tr>
               <td>
-                <label class="btn btn-default" ng-repeat="type in contactTypes" title="{{type.name}}">
-                  <input type="radio" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" />
-                  <span class="{{type.icon}}"></span>
-                </label>
+                <div class="form-group" ng-class="{ 'has-error' : contactlistform.contactType.$invalid && !contactlistform.contactType.$pristine }">
+                  <label class="btn btn-default" ng-repeat="type in contactTypes" title="{{type.name}}">
+                    <input type="radio" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" />
+                    <span class="{{type.icon}}"></span>
+                  </label>
+                </div>
                 <!-- <div class="btn-group" data-toggle="buttons">
                   <label class="btn btn-default" ng-repeat="type in contactTypes">
                     <input type="radio" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" />
@@ -102,27 +104,36 @@
 
               </td>
               <td>
-                <input type="text" class="form-control" ng-model="contact.name" required />
+                <div class="form-group" ng-class="{ 'has-error' : contactlistform.name.$invalid && !contactlistform.name.$pristine }">
+                  <input type="text" name="name" class="form-control" ng-model="contact.name" required />
+                </div>
               </td>
               <td>
-                <input type="email" class="form-control" ng-model="contact.email" required />
+                <div class="form-group" ng-class="{ 'has-error' : contactlistform.email.$invalid && !contactlistform.email.$pristine }">
+                  <input type="email" name="email" class="form-control" ng-model="contact.email" required />
+                </div>
               </td>
               <td>
-                <input type="number" step="0.01" class="form-control" ng-model="contact.amount" required />
+                <div class="form-group" ng-class="{ 'has-error' : contactlistform.amount.$invalid && !contactlistform.amount.$pristine }">
+                  <input type="number" name="amount" step="0.01" class="form-control" ng-model="contact.amount" required />
+                </div>
               </td>
               <td>
-                <select class="form-control" ng-model="contact.year" ng-options="year for year in years" required></select>
+                <div class="form-group" ng-class="{ 'has-error' : contactlistform.year.$invalid && !contactlistform.year.$pristine }">
+                  <select class="form-control" name="year" ng-model="contact.year" ng-options="year for year in years" required></select>
+                </div>
               </td>
               <td>
                 <!-- <select class="form-control" ng-model="contact.month">
                   <option ng-repeat="month in months" value="{{month.id}}">{{month.name}}</option>
                 </select> -->
-                <select class="form-control" ng-model="contact.month" ng-options="parseInt(key) as value for (key, value ) in months" required>
-                </select>
+                <div class="form-group" ng-class="{ 'has-error' : contactlistform.month.$invalid && !contactlistform.month.$pristine }">
+                  <select class="form-control" name="month" ng-model="contact.month" ng-options="parseInt(key) as value for (key, value ) in months" required></select>
+                </div>
               </td>
               <td>&nbsp;</td>
               <td>
-                <button type="button" class="btn btn-primary" ng-click="saveContact()" ng-disabled="contactlistform.$invalid" ng-show="isSaveAvailable">Save</button>
+                <button type="sumbit" class="btn btn-primary" ng-disabled="contactlistform.$invalid" ng-show="isSaveAvailable">Save</button>
                 <button type="button" class="btn btn-info" ng-click="update()" ng-disabled="contactlistform.$invalid" ng-show="isUpdateAvailable">Update</button>
                 <button type="button" class="btn btn-info" ng-click="cancelUpdate()" ng-disabled="contactlistform.$invalid" ng-show="isCancelUpdateAvailable">Cancel</button>
               </td>

@@ -5,7 +5,3 @@ body {
   padding: 30px 15px;
   text-align: left;
 }
-
-input.ng-invalid.ng-dirty {
-  border: 1px solid red;
-}
