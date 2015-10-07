@@ -106,8 +106,7 @@
 				$scope.isUpdateAvailable = false;
 			};
 
-			$scope.saveContact = function() {
-				console.log($scope.contact);
+			$scope.saveContact = function() {				
 				$http.post('/contactlist', $scope.contact).success(function(response) {
 					refresh();
 				});

@@ -88,7 +88,7 @@
           <tbody>
             <tr>
               <td>
-                <input type="radio" ng-repeat="type in contactTypes" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" />
+                <input type="radio" ng-repeat="type in contactTypes" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" required />
                 <!-- <div class="btn-group" data-toggle="buttons"> -->
                   <!-- <label class="btn btn-default">
                     <input type="radio" value="1" name="contactType" ng-model="selectedtype" />
