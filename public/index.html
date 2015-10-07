@@ -88,21 +88,18 @@
           <tbody>
             <tr>
               <td>
-                <input type="radio" ng-repeat="type in contactTypes" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" required />
-                <!-- <div class="btn-group" data-toggle="buttons"> -->
-                  <!-- <label class="btn btn-default">
-                    <input type="radio" value="1" name="contactType" ng-model="selectedtype" />
-                    1
-                  </label>
-                  <label class="btn btn-default">
-                    <input type="radio" value="2" name="contactType" ng-model="selectedtype" />
-                    2
-                  </label> -->
-                  <!-- <label class="btn btn-default" ng-repeat="type in contactTypes">
+                <label class="btn btn-default" ng-repeat="type in contactTypes" title="{{type.name}}">
+                  <input type="radio" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" />
+                  <span class="{{type.icon}}"></span>
+                </label>
+                <!-- <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-default" ng-repeat="type in contactTypes">
                     <input type="radio" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" />
                     {{type.name}}
-                  </label> -->
-                <!-- </div> -->
+                  </label>
+                </div> -->
+                <!-- <input type="radio" ng-repeat="type in contactTypes" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" required /> -->
+
               </td>
               <td>
                 <input type="text" class="form-control" ng-model="contact.name" required />
@@ -131,7 +128,8 @@
             </tr>
             <tr ng-repeat="contact in contactlist | filter: searchKeyword">
               <td>
-                {{contact.type.name}}
+                <span class="{{contact.type.icon}}" title="{{contact.type.name}}"></span>
+                {{contact.type.name}}          
               </td>
               <td>
                 {{contact.name}}

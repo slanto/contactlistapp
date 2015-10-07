@@ -59,10 +59,11 @@
 						angular.forEach(response.items, function(value, key) {
 							var contact = value;
 							var foundType = $filter('getTypeById')($scope.contactTypes, value.type);
-
+							
 							contact.type = {
 								id: foundType.value,
-								name: foundType.name
+								name: foundType.name,
+								icon: foundType.icon
 							}
 
 							contactList.push(contact);
@@ -94,7 +95,8 @@
 				$scope.contact = {
 					year: date.getFullYear(),
 					month: date.getMonth() + 1,
-					created: date
+					created: date,
+					type: 1
 				};
 			};
 
@@ -106,7 +108,7 @@
 				$scope.isUpdateAvailable = false;
 			};
 
-			$scope.saveContact = function() {				
+			$scope.saveContact = function() {
 				$http.post('/contactlist', $scope.contact).success(function(response) {
 					refresh();
 				});
