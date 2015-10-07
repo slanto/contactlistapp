@@ -59,7 +59,7 @@
 						angular.forEach(response.items, function(value, key) {
 							var contact = value;
 							var foundType = $filter('getTypeById')($scope.contactTypes, value.type);
-							
+
 							contact.type = {
 								id: foundType.value,
 								name: foundType.name,
@@ -84,9 +84,14 @@
 				getContactTypes();
 				$scope.years = getYears();
 				$scope.months = getMonths();
+				$scope.isSaveAvailable = true;
+				$scope.isUpdateAvailable = false;
+				$scope.isCancelUpdateAvailable = false;
+
 				var date = new Date();
 				$scope.searchYear = date.getFullYear();
 				$scope.searchMonth = date.getMonth() + 1;
+
 				refresh();
 			};
 
@@ -98,14 +103,16 @@
 					created: date,
 					type: 1
 				};
+
+				$scope.isSaveAvailable = true;
+				$scope.isUpdateAvailable = false;
+				$scope.isCancelUpdateAvailable = false;
 			};
 
 			init();
 
 			$scope.addContact = function() {
 				clearAndSetDefault();
-				$scope.isSaveAvailable = true;
-				$scope.isUpdateAvailable = false;
 			};
 
 			$scope.saveContact = function() {
@@ -129,23 +136,29 @@
 					$scope.contact = response;
 					$scope.isSaveAvailable = false;
 					$scope.isUpdateAvailable = true;
+					$scope.isCancelUpdateAvailable = true;
 				});
 			};
 
 			$scope.search = function() {
 				refresh();
-			}
+			};
 
 			$scope.update = function() {
 				$http.put('/contactlist/' + $scope.contact._id, $scope.contact).success(function(response) {
 					refresh();
-					$scope.isSaveAvailable = false;
+					$scope.isSaveAvailable = true;
 					$scope.isUpdateAvailable = false;
+					$scope.isCancelUpdateAvailable = false;
 				});
 			};
 
-			$scope.isSaveAvailable = false;
-			$scope.isUpdateAvailable = false;
+			$scope.cancelUpdate = function() {
+				clearAndSetDefault();
+				$scope.isSaveAvailable = true;
+				$scope.isUpdateAvailable = false;
+				$scope.isCancelUpdateAvailable = false;
+			};
 
 		 //TODO: move it to server.js
 		 function getYears() {

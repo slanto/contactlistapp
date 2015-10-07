@@ -54,7 +54,7 @@
               <select class="form-control" ng-model="searchYear" ng-options="year for year in years" ng-change="search()"></select>
 
               <input class="form-control" type="text" ng-model="searchKeyword" placeholder="seach"/>
-              <button type="button" class="btn btn-info" ng-click="addContact()">Add contact</button>
+              <!-- <button type="button" class="btn btn-info" ng-click="addContact()">Add contact</button> -->
           </div>
         </form>
 
@@ -124,12 +124,13 @@
               <td>
                 <button type="button" class="btn btn-primary" ng-click="saveContact()" ng-disabled="contactlistform.$invalid" ng-show="isSaveAvailable">Save</button>
                 <button type="button" class="btn btn-info" ng-click="update()" ng-disabled="contactlistform.$invalid" ng-show="isUpdateAvailable">Update</button>
+                <button type="button" class="btn btn-info" ng-click="cancelUpdate()" ng-disabled="contactlistform.$invalid" ng-show="isCancelUpdateAvailable">Cancel</button>
               </td>
             </tr>
             <tr ng-repeat="contact in contactlist | filter: searchKeyword">
               <td>
                 <span class="{{contact.type.icon}}" title="{{contact.type.name}}"></span>
-                {{contact.type.name}}          
+                {{contact.type.name}}
               </td>
               <td>
                 {{contact.name}}
