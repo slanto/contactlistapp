@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var mongojs = require('mongojs');
-var db = mongojs('contactlist', ['contactlist']);
+var db = mongojs('contactlist', ['contactlist', 'contacttype']);
 var bodyParser = require('body-parser');
 
 app.use(express.static(__dirname + "/public"));
@@ -18,7 +18,7 @@ app.get('/contactlist/:id', function(req, res) {
 
 app.get('/contactlist/:year?/:month?', function(req, res) {
   var criteria = {};
-  
+
   if (req.params.year) {
     criteria.year = parseInt(req.params.year);
   }
@@ -41,7 +41,6 @@ app.get('/contactlist/:year?/:month?', function(req, res) {
     res.json(result);
   });
 });
-
 
 var getAmount = function(str) {
   return str * 1000;
@@ -72,12 +71,19 @@ app.put('/contactlist/:id', function(req, res) {
         amount: getAmount(req.body.amount),
         year: req.body.year,
         month: req.body.month,
-        created: req.body.created
+        created: req.body.created,
+        type: req.body.type
       }},
       new: true
   }, function(err, doc) {
     res.json(doc);
   });
+});
+
+app.get('/contacttype', function(req, res) {
+    db.contacttype.find(function(err, docs) {
+        res.json(docs);
+    });
 });
 
 app.listen(3000, function() {

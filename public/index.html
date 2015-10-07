@@ -40,14 +40,14 @@
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
     <div class="container" ng-controller="AppCtrl">
       <div class="starter-template">
         <h1>Contact list app {{totalAmount | currency}}</h1>
-        
+
         <form class="form-inline">
           <div class="form-group">
               <select class="form-control" ng-model="searchMonth" ng-change="search()" ng-options="parseInt(key) as value for (key, value ) in months"></select>
@@ -62,6 +62,9 @@
           <table class="table">
           <thead>
             <tr>
+              <th>
+                Type
+              </th>
               <th>
                 Name
               </th>
@@ -84,6 +87,23 @@
           </thead>
           <tbody>
             <tr>
+              <td>
+                <input type="radio" ng-repeat="type in contactTypes" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" />
+                <!-- <div class="btn-group" data-toggle="buttons"> -->
+                  <!-- <label class="btn btn-default">
+                    <input type="radio" value="1" name="contactType" ng-model="selectedtype" />
+                    1
+                  </label>
+                  <label class="btn btn-default">
+                    <input type="radio" value="2" name="contactType" ng-model="selectedtype" />
+                    2
+                  </label> -->
+                  <!-- <label class="btn btn-default" ng-repeat="type in contactTypes">
+                    <input type="radio" ng-checked="{{type.default}}" value="{{type.value}}" name="contactType" ng-model="contact.type" title="{{type.name}}" />
+                    {{type.name}}
+                  </label> -->
+                <!-- </div> -->
+              </td>
               <td>
                 <input type="text" class="form-control" ng-model="contact.name" required />
               </td>
@@ -110,6 +130,9 @@
               </td>
             </tr>
             <tr ng-repeat="contact in contactlist | filter: searchKeyword">
+              <td>
+                {{contact.type.name}}
+              </td>
               <td>
                 {{contact.name}}
               </td>
@@ -140,6 +163,8 @@
 
     <script src="/bower_components/angular/angular.min.js"></script>
     <script src="/bower_components/angular-i18n/angular-locale_pl-pl.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="controllers/controller.js"></script>
   </body>
 </html>

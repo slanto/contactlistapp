@@ -22,18 +22,65 @@
 			}
 		}]);
 
-	  myApp.controller('AppCtrl', ['$scope', '$http', function($scope, $http) {
+		myApp.filter('getTypeById', [function() {
+ 			return function (input, id) {
+				var i = 0, len = input.length;
+		    for (; i<len; i++) {
+		      if (+input[i].value === +id) {
+		        return input[i];
+		      }
+		    }
+		    return null;
+ 			}
+ 		}]);
+
+		myApp.service('utils', ['$http', '$q', function($http, $q) {
+				return {
+					getContactTypes: function() {
+						var deffered = $q.defer();
+							$http.get('/contacttype')
+								.success(function(response){
+									deffered.resolve(response);
+								})
+								.error(function(msg, code) {
+									deffered.reject(msg);
+								});
+							return deffered.promise;
+						}
+					}
+				}]);
+
+	  myApp.controller('AppCtrl', ['$scope', '$http', '$filter', 'utils', function($scope, $http, $filter, utils) {
 
 			var refresh = function() {
 				$http.get('/contactlist/' + $scope.searchYear + '/' + $scope.searchMonth)
 					.success(function(response) {
-						$scope.contactlist = response.items;
+						var contactList = [];
+						angular.forEach(response.items, function(value, key) {
+							var contact = value;
+							var foundType = $filter('getTypeById')($scope.contactTypes, value.type);
+
+							contact.type = {
+								id: foundType.value,
+								name: foundType.name
+							}
+
+							contactList.push(contact);
+						});
+						$scope.contactlist = contactList;
 						$scope.totalAmount = response.totalAmount;
 						clearAndSetDefault();
 				});
 			};
 
+			var getContactTypes = function() {
+						utils.getContactTypes().then(function(response) {
+							$scope.contactTypes = response;
+						});
+			};
+
 			var init = function() {
+				getContactTypes();
 				$scope.years = getYears();
 				$scope.months = getMonths();
 				var date = new Date();
@@ -59,7 +106,8 @@
 				$scope.isUpdateAvailable = false;
 			};
 
-			$scope.saveContact = function(){
+			$scope.saveContact = function() {
+				console.log($scope.contact);
 				$http.post('/contactlist', $scope.contact).success(function(response) {
 					refresh();
 				});
@@ -86,7 +134,7 @@
 			$scope.search = function() {
 				refresh();
 			}
-			
+
 			$scope.update = function() {
 				$http.put('/contactlist/' + $scope.contact._id, $scope.contact).success(function(response) {
 					refresh();
