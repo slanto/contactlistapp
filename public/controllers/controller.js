@@ -80,13 +80,18 @@
 						});
 			};
 
+			var setDefaultButtonsAvailability = function() {
+				$scope.isSaveAvailable = true;
+				$scope.isUpdateAvailable = false;
+				$scope.isCancelUpdateAvailable = false;
+			}
+
 			var init = function() {
 				getContactTypes();
 				$scope.years = getYears();
 				$scope.months = getMonths();
-				$scope.isSaveAvailable = true;
-				$scope.isUpdateAvailable = false;
-				$scope.isCancelUpdateAvailable = false;
+
+				setDefaultButtonsAvailability();
 
 				var date = new Date();
 				$scope.searchYear = date.getFullYear();
@@ -104,9 +109,7 @@
 					type: 1
 				};
 
-				$scope.isSaveAvailable = true;
-				$scope.isUpdateAvailable = false;
-				$scope.isCancelUpdateAvailable = false;
+				setDefaultButtonsAvailability();
 			};
 
 			init();
@@ -147,17 +150,11 @@
 			$scope.update = function() {
 				$http.put('/contactlist/' + $scope.contact._id, $scope.contact).success(function(response) {
 					refresh();
-					$scope.isSaveAvailable = true;
-					$scope.isUpdateAvailable = false;
-					$scope.isCancelUpdateAvailable = false;
 				});
 			};
 
 			$scope.cancelUpdate = function() {
 				clearAndSetDefault();
-				$scope.isSaveAvailable = true;
-				$scope.isUpdateAvailable = false;
-				$scope.isCancelUpdateAvailable = false;
 			};
 
 		 //TODO: move it to server.js
