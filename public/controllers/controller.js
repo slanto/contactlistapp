@@ -104,8 +104,7 @@
 				var date = new Date();
 				$scope.contact = {
 					year: date.getFullYear(),
-					month: date.getMonth() + 1,
-					created: date,
+					month: date.getMonth() + 1,					
 					type: 1
 				};
 
