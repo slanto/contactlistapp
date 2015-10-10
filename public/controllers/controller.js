@@ -1,38 +1,14 @@
 (function () {
 	'use strict';
 
-	function getMonths(locale) {
-		locale = locale || "pl-PL";
-		var months = [];
-		months.push("--Wybierz miesiąc--")
-		for(var i = 0; i < 12; i++) {
-			var date = new Date();
-			date.setMonth(i);
-			months.push(date.toLocaleString(locale, { month: "long" }));
-		}
-		return months;
-	};
-
   var myApp = angular.module('myApp', []);
 
-	 myApp.filter('monthName', [function() {
+	 myApp.filter('monthName', ['utils', function(utils) {
 			return function (monthNumber) { //1 = January
-					var monthNames = getMonths();
+					var monthNames = utils.getMonths();
 					return monthNames[monthNumber];
 			}
 		}]);
-
-		myApp.filter('getTypeById', [function() {
- 			return function (input, id) {
-				var i = 0, len = input.length;
-		    for (; i<len; i++) {
-		      if (+input[i].value === +id) {
-		        return input[i];
-		      }
-		    }
-		    return null;
- 			}
- 		}]);
 
 		myApp.service('utils', ['$http', '$q', function($http, $q) {
 				return {
@@ -46,6 +22,47 @@
 									deffered.reject(msg);
 								});
 							return deffered.promise;
+						},
+						getContactList: function(year, month) {
+							var deffered = $q.defer();
+							$http.get('/contactlist/' + year + '/' + month)
+								.success(function(response) {
+									deffered.resolve(response);
+								})
+								.error(function(msg, code){
+									deffered.reject(msg);
+								});
+								return deffered.promise;
+						},
+						getTypeById: function(input, id) {
+							var i = 0, len = input.length;
+					    for (; i<len; i++) {
+					      if (+input[i].value === +id) {
+					        return input[i];
+					      }
+					    }
+					    return null;
+						},
+						getYears: function() {
+				 			var currentYear = new Date().getFullYear();
+				 			var years = [];
+				 			var startYear = 2009
+				 			while (startYear <= currentYear) {
+				 				years.push(startYear);
+				 				startYear++;
+				 			}
+				 			return years;
+				 		},
+						getMonths: function(locale) {
+							locale = locale || "pl-PL";
+							var months = [];
+							months.push("--Wybierz miesiąc--")
+							for(var i = 0; i < 12; i++) {
+								var date = new Date();
+								date.setMonth(i);
+								months.push(date.toLocaleString(locale, { month: "long" }));
+							}
+							return months;
 						}
 					}
 				}]);
@@ -53,12 +70,11 @@
 	  myApp.controller('AppCtrl', ['$scope', '$http', '$filter', 'utils', function($scope, $http, $filter, utils) {
 
 			var refresh = function() {
-				$http.get('/contactlist/' + $scope.searchYear + '/' + $scope.searchMonth)
-					.success(function(response) {
+				utils.getContactList($scope.searchYear, $scope.searchMonth).then(function(response){
 						var contactList = [];
 						angular.forEach(response.items, function(value, key) {
 							var contact = value;
-							var foundType = $filter('getTypeById')($scope.contactTypes, value.type);
+							var foundType = utils.getTypeById($scope.contactTypes, value.type);
 
 							contact.type = {
 								id: foundType.value,
@@ -74,12 +90,6 @@
 				});
 			};
 
-			var getContactTypes = function() {
-						utils.getContactTypes().then(function(response) {
-							$scope.contactTypes = response;
-						});
-			};
-
 			var setDefaultButtonsAvailability = function() {
 				$scope.isSaveAvailable = true;
 				$scope.isUpdateAvailable = false;
@@ -87,24 +97,26 @@
 			}
 
 			var init = function() {
-				getContactTypes();
-				$scope.years = getYears();
-				$scope.months = getMonths();
+				$scope.years = utils.getYears();
+				$scope.months = utils.getMonths();
 
-				setDefaultButtonsAvailability();
+				//setDefaultButtonsAvailability();
 
 				var date = new Date();
 				$scope.searchYear = date.getFullYear();
 				$scope.searchMonth = date.getMonth() + 1;
 
-				refresh();
+				utils.getContactTypes().then(function(response) {
+					$scope.contactTypes = response;
+					refresh();
+				});
 			};
 
 			var clearAndSetDefault = function() {
 				var date = new Date();
 				$scope.contact = {
 					year: date.getFullYear(),
-					month: date.getMonth() + 1,					
+					month: date.getMonth() + 1,
 					type: 1
 				};
 
@@ -154,20 +166,7 @@
 
 			$scope.cancelUpdate = function() {
 				clearAndSetDefault();
-			};
-
-		 //TODO: move it to server.js
-		 function getYears() {
-			var currentYear = new Date().getFullYear();
-			var years = [];
-			var startYear = 2009
-			while (startYear <= currentYear) {
-				years.push(startYear);
-				startYear++;
-			}
-			return years;
-		};
-
+			};		 
 	}]);
 
 }());

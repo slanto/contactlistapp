@@ -17,7 +17,12 @@ db.once('open', function() {
    type: Number,
    name: String,
    email: String,
-   amount: Number
+   amount: {
+     type: Number,
+     get: function(value) {
+       return value / amountFactor;
+     }
+   }
  });
 
  var contactTypeSchema = mongoose.Schema({
@@ -39,10 +44,10 @@ app.use(bodyParser.json());
 
 app.get('/contactlist/:id', function(req, res) {
   var id = req.params.id;
-  ContactList.findOne({ _id: mongoose.Types.ObjectId(id) }, function(err, doc) {
-    doc.amount = doc.amount / amountFactor;
+  ContactList.findById(id).exec(function(err, doc) {
+    doc.amount = doc.amount;// / amountFactor;    
     res.json(doc);
-  })
+  });
 });
 
 app.get('/contactlist/:year?/:month?', function(req, res) {
@@ -59,14 +64,17 @@ app.get('/contactlist/:year?/:month?', function(req, res) {
   var totalAmount = 0;
   var result = {};
 
-  ContactList.find(criteria, function(err, contacts) {
+  ContactList.find(criteria).sort({ created: -1}).exec(function(err, contacts) {
+    if (err) return handleError(err);
+
+    //res.json(contacts);
     contacts.forEach(function(doc, index) {
         totalAmount += doc.amount;
-        doc.amount = doc.amount / amountFactor;
+        doc.amount = doc.amount;// / amountFactor;
       })
 
       result.items = contacts;
-      result.totalAmount = totalAmount / amountFactor;
+      result.totalAmount = totalAmount;// / amountFactor;
       res.json(result);
   });
 });
